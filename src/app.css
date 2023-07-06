@@ -1,4 +1,4 @@
-/* Write your global styles here, in PostCSS syntax */
+/* Global styles here, in PostCSS syntax */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,4 +6,25 @@
 html,
 body {
 	@apply h-full;
+}
+
+hr {
+	border-top: 1px solid #E0E0E0;
+}
+
+input {
+	@apply
+	border-2
+	w-full
+	border-grey-100
+	px-4
+	h-12
+	rounded-sm;
+}
+
+.display-font {
+	font-family: Poppins, sans-serif;
+}
+.body-font {
+	font-family: Inter, sans-serif;
 }

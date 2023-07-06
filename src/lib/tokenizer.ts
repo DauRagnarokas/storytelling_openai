@@ -1,5 +1,6 @@
 import GPT3TokenizerImport from 'gpt3-tokenizer'
 
+//gets total length of tokens than given text contains
 const GPT3Tokenizer: typeof GPT3TokenizerImport =
 	typeof GPT3TokenizerImport === 'function'
 		? GPT3TokenizerImport

@@ -1,22 +1,51 @@
 <script lang="ts">
-	import type { ChatCompletionRequestMessageRoleEnum } from 'openai'
-	export let type: ChatCompletionRequestMessageRoleEnum
-	export let message: string
+    import {ChatCompletionRequestMessageRoleEnum} from 'openai'
+
+    const assistantLabel = 'AI'
+    const userLabel = 'ET'
+
+    export let type: ChatCompletionRequestMessageRoleEnum;
+    export let message: string
+
+    export let isFirst = true
 </script>
 
-<div class="chat {type === 'user' ? 'chat-end' : 'chat-start'} justify-end">
-	<div class="chat-image avatar">
-		<div class="w-10 rounded-full">
-			<img
-				src="https://ui-avatars.com/api/?name={type === 'user' ? 'Me' : 'B'}"
-				alt="{type} avatar"
-			/>
-		</div>
-	</div>
-	<div class="chat-header">
-		{type === 'user' ? 'Me' : 'Bot'}
-	</div>
-	<div class="chat-bubble {type === 'user' ? 'chat-bubble-primary' : 'chat-bubble-secondary'}">
-		{message}
-	</div>
+<div class="chat {type === ChatCompletionRequestMessageRoleEnum.User ? 'chat-end' : 'chat-start'} {isFirst ? 'pt-4' : 'pt-1'}">
+    <div class="chat-avatar  {!isFirst ? 'invisible' : ''}">{type === ChatCompletionRequestMessageRoleEnum.User ? userLabel : assistantLabel}</div>
+    <div class="chat-message">
+        {message}
+    </div>
 </div>
+
+<style lang="postcss">
+    .chat-avatar {
+        @apply
+        w-10
+        h-10
+        rounded-md
+        bg-brand
+        text-white
+        grid
+        shrink-0
+        place-items-center;
+    }
+    .chat {
+        @apply
+        flex
+        space-x-2;
+    }
+    .chat-start {
+        margin-right: 56px;
+    }
+    .chat-end {
+        @apply
+        flex-row-reverse
+        space-x-reverse;
+        margin-left: 56px;
+    }
+    .chat-message {
+        @apply
+        rounded-lg px-4 py-2
+        bg-grey-200;
+    }
+</style>

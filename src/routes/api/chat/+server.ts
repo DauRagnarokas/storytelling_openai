@@ -11,16 +11,20 @@ export const config: Config = {
 
 export const POST: RequestHandler = async ({ request }) => {
 	try {
+		// makes sure that openai key exists
 		if (!OPENAI_KEY) {
 			throw new Error('OPENAI_KEY env variable not set')
 		}
 
+		// messages send from client side
 		const requestData = await request.json()
 
+		// there must be some messages set
 		if (!requestData) {
 			throw new Error('No request data')
 		}
 
+		// converts messages to openai type
 		const reqMessages: ChatCompletionRequestMessage[] = requestData.messages
 
 		if (!reqMessages) {
@@ -29,11 +33,15 @@ export const POST: RequestHandler = async ({ request }) => {
 
 		let tokenCount = 0
 
+		// Retrieved total number of token of request messages
 		reqMessages.forEach((msg) => {
-			const tokens = getTokens(msg.content)
-			tokenCount += tokens
+			if (msg.content) {
+				const tokens = getTokens(msg.content)
+				tokenCount += tokens
+			}
 		})
 
+		// checks user input for appropriate language
 		const moderationRes = await fetch('https://api.openai.com/v1/moderations', {
 			headers: {
 				'Content-Type': 'application/json',
@@ -44,6 +52,7 @@ export const POST: RequestHandler = async ({ request }) => {
 				input: reqMessages[reqMessages.length - 1].content
 			})
 		})
+		// in case moderation is flagged, error is throned
 		if (!moderationRes.ok) {
 			const err = await moderationRes.json()
 			throw new Error(err.error.message)
@@ -56,23 +65,28 @@ export const POST: RequestHandler = async ({ request }) => {
 			throw new Error('Query flagged by openai')
 		}
 
+		//personalize ai
 		const prompt =
 			'You are a virtual assistant for a company called Huntabyte. Your name is Axel Smith'
 		tokenCount += getTokens(prompt)
 
+		// in case token limit is reached, query will be reset
 		if (tokenCount >= 4000) {
 			throw new Error('Query too large')
 		}
 
+		// constructs messages array to pass to openai endpoint
 		const messages: ChatCompletionRequestMessage[] = [
 			{ role: 'system', content: prompt },
 			...reqMessages
 		]
 
+		// set up request options
 		const chatRequestOpts: CreateChatCompletionRequest = {
 			model: 'gpt-3.5-turbo',
 			messages,
 			temperature: 0.9,
+			max_tokens: 4000,
 			stream: true
 		}
 
