@@ -13,7 +13,10 @@ This app leverages the [OpenAI](https://ai.com) ChatGPT API with the `gpt-3.5-tu
 
 ## Set up
 
-Assign OpenAI API key to the `OPENAI_KEY` environment variable and rename file .env.example to .env
+To set up the project, follow these steps:
+
+1. Copy the file `.env.example` to `.env`.
+2. Assign your OpenAI API key to the `OPENAI_KEY` environment variable in the `.env` file.
 
 ## Run Locally
 
