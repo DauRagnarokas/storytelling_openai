@@ -8,8 +8,12 @@ This app leverages the [OpenAI](https://ai.com) ChatGPT API with the `gpt-3.5-tu
 
 ## Built with
 
-- Meta-Framework: [SvelteKit](https://kit.svelte.dev)
+- Framework: [SvelteKit](https://kit.svelte.dev)
 - Styles/Components: [TailwindCSS](https://tailwindcss.com)
+
+## Set up
+
+Assign OpenAI API key to the `OPENAI_KEY` environment variable and rename file .env.example to .env
 
 ## Run Locally
 
@@ -34,5 +38,3 @@ Use the following credentials to log in:
 Email: demo@mail.com
 Password: password
 ```
-
-You are encouraged to use your own OpenAI API key. In that case, assign it to the `OPENAI_KEY` environment variable.
