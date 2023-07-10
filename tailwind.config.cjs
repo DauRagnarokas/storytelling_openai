@@ -1,44 +1,29 @@
 const config = {
-    content: ["./src/**/*.{html,js,svelte,ts}"],
+    content: [
+        "./src/**/*.{html,js,svelte,ts}",
+        "./node_modules/flowbite-svelte/**/*.{html,js,svelte,ts}",
+    ],
 
     theme: {
-        borderRadius: {
-            'sm': '4px',
-            'md': '10px',
-            'lg': '12px',
-        },
         colors: {
-            'brand': '#FF007A',
+            'primary': {
+                400: '#ff0b7f',
+                DEFAULT: '#FF007A',
+                600: '#d00064',
+            },
             'white': '#fff',
-            'brand-green': '#46B455',
+            'accent': '#46B455',
+            'light-grey': '#A4A9BF',
             'grey': {
                 100: '#E0E0E0',
                 200: '#F1F1F1',
+                500: '#9F9F9F',
             }
         },
         extend: {}
     },
-    daisyui: {
-        themes: [
-            {
-                mytheme: {
-                    "primary": "#ff007a",
-                    "secondary": "#570df8",
-                    "accent": "#46b455",
-                    "neutral": "#3d4451",
-                    "base-100": "#ffffff",
-                    ".btn-accent": {
-                        "color": "#ffffff",
-                    },
-                    ".btn-accent[disabled], .btn-accent:disabled" : {
-                        'color': 'rgba(255,255,255,0.5)',
-                        'background-color': '#46b455'
-                    }
-                },
-            },
-        ],
-    },
-    plugins: [require("daisyui")],
+    plugins: [require('flowbite/plugin')
+    ],
 };
 
 module.exports = config;

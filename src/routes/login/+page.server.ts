@@ -1,5 +1,6 @@
 import { fail, redirect } from '@sveltejs/kit'
 import { Routes } from '$lib/routes'
+
 export const actions = {
 	login: async ({ request, cookies }) => {
 		const data = await request.formData()
@@ -11,8 +12,7 @@ export const actions = {
 		cookies.set('username', username, { path: Routes.home })
 		throw redirect(303, Routes.home)
 	},
-	logout: async ({ request, cookies }) => {
-		console.log('logout action')
+	logout: async ({ cookies }) => {
 		cookies.delete('username')
 		throw redirect(303, Routes.home)
 	}

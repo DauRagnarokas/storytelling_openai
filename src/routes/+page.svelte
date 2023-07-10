@@ -5,6 +5,40 @@
     import {SSE} from 'sse.js'
     import SendIcon from "$lib/components/SendIcon.svelte";
     import Header from "$lib/components/Header.svelte";
+    import Drawer from "$lib/components/Drawer.svelte";
+    import {keywordsStore, temperatureStore, tokensStore, toneStore} from "$lib/store/stores";
+    import {onDestroy} from 'svelte'
+    import { Modal } from 'flowbite-svelte'
+
+    let errorMessage = 'Some error text';
+    let errorModal = false
+
+    let temperature: number
+    const temperatureSubscribe = temperatureStore.subscribe((value) => {
+        temperature = value
+    })
+
+    let tokens: number
+    const tokensSubscribe = tokensStore.subscribe((value) => {
+        tokens = value
+    })
+
+    let keywords: string[]
+    const keywordsSubscribe = keywordsStore.subscribe((value) => {
+        keywords = value
+    })
+
+    let tone: string
+    const toneSubscribe = toneStore.subscribe((value) => {
+        tone = value
+    })
+
+    onDestroy(() => {
+        temperatureSubscribe()
+        tokensSubscribe()
+        keywordsSubscribe()
+        toneSubscribe()
+    })
 
     let query = ''
     let answer = ''
@@ -21,14 +55,14 @@
 
     function handleEnter(event: SubmitEvent) {
         if (event.keyCode == 13) {
-            console.log('event')
-
-            console.log(event.keyCode)
             handleSubmit();
         }
     }
 
     const handleSubmit = async () => {
+        // In case query is empty, data is not send to API
+        if(query.length === 0) return
+
         loading = true
         chatMessages = [...chatMessages, {
             role: ChatCompletionRequestMessageRoleEnum.User,
@@ -39,7 +73,13 @@
             headers: {
                 'Content-Type': 'application/json'
             },
-            payload: JSON.stringify({messages: chatMessages})
+            payload: JSON.stringify({
+                messages: chatMessages,
+                temperature: temperature,
+                tokens: tokens,
+                tone: tone,
+                keywords: keywords,
+            })
         })
 
         query = ''
@@ -77,27 +117,13 @@
         loading = false
         query = ''
         answer = ''
-        console.error(err)
+        errorMessage = JSON.parse(err.data).error
+        errorModal = true
     }
 </script>
 
+<Drawer/>
 <div class="flex flex-col w-full">
-    <form
-            class="p-4 pt-2 bg-white fixed bottom-0 left-0 right-0"
-            on:submit|preventDefault={() => handleSubmit()}
-    >
-        <label for="email" class="relative text-gray-400 focus-within:text-gray-600 block">
-
-            <button type="submit" class="w-8 h-8 absolute top-1/2 transform -translate-y-1/2 right-2">
-                <SendIcon/>
-            </button>
-
-            <input type="text" name="email" id="email" placeholder="Type your prompt here..."
-                   on:keypress={handleEnter} bind:value={query} class="rounded-md w-full">
-        </label>
-        <!--                <input type="text" class="input w-full" bind:value={query}/>-->
-        <!--                <button type="submit" class="btn btn-accent"> Send</button>-->
-    </form>
     <div class="fixed top-0 left-0 right-0 bg-white">
         <Header/>
         <hr>
@@ -105,17 +131,9 @@
     <div class="flex px-4 pt-28 pb-24 flex-col gap-2">
         <ChatMessage type={ChatCompletionRequestMessageRoleEnum.Assistant}
                      message="Hello, ask me anything you want!"/>
-        <ChatMessage type={ChatCompletionRequestMessageRoleEnum.User}
-                     message="What is your age?"/>
-        <ChatMessage type={ChatCompletionRequestMessageRoleEnum.User}
-                     message="I'm sorry, but I'm not sure what refers to. Could you please provide more information or clarify your request? 3"
-                     isFirst={false}/>
-        <ChatMessage type={ChatCompletionRequestMessageRoleEnum.User}
-                     message="The exact center of Europe is a topic of debate and there is no universally agreed-upon location. However, there are a few places that are commonly considered as potential centers of Europe. One such place is the municipality of Rakhiv in the Zakarpattia Oblast of Ukraine. Another popular contender is Vilnius, the capital city of Lithuania. Ultimately, the concept of the center of Europe is open to interpretation and can vary depending on the method used to calculate it. 5"
-        />
         {#each chatMessages as message, index}
             {#if message.content}
-                <ChatMessage type={message.role} message={message.content + ' ' + index}
+                <ChatMessage type={message.role} message={message.content}
                              isFirst={index === 0 || chatMessages[index-1].role !== message.role}/>
             {/if}
         {/each}
@@ -129,5 +147,35 @@
         {/if}
     </div>
     <div bind:this={scrollToDiv}></div>
+    <!--Footer message field-->
+    <form
+            class="p-4 pt-2 bg-white fixed bottom-0 left-0 right-0"
+            on:submit|preventDefault={() => handleSubmit()}
+    >
+        <label for="prompt" class="relative text-gray-400 focus-within:text-gray-600 block">
 
+            <button type="submit" class="w-8 h-8 absolute top-1/2 transform -translate-y-1/2 right-2">
+                <SendIcon/>
+            </button>
+
+            <input type="text" id="prompt" placeholder="Type your prompt here..."
+                   on:keypress={handleEnter} bind:value={query} class="input">
+        </label>
+    </form>
 </div>
+
+<Modal bind:open={errorModal} size="xs" autoclose outsideclose>
+    <div class="text-center">
+        <svg aria-hidden="true" class="mx-auto mb-4 w-14 h-14 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <p class="mb-5 text-lg font-semibold">{errorMessage}</p>
+        <button on:click={() => errorModal = false} class="error-button min-w-[112px]">OK</button>
+    </div>
+</Modal>
+
+
+<style>
+    #prompt {
+        @apply
+        pr-12;
+    }
+</style>

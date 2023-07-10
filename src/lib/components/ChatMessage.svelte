@@ -23,29 +23,35 @@
         w-10
         h-10
         rounded-md
-        bg-brand
+        bg-primary
         text-white
         grid
         shrink-0
+        font-semibold
         place-items-center;
     }
+
     .chat {
         @apply
         flex
         space-x-2;
     }
+
     .chat-start {
         margin-right: 56px;
     }
+
     .chat-end {
         @apply
         flex-row-reverse
         space-x-reverse;
         margin-left: 56px;
     }
+
     .chat-message {
         @apply
         rounded-lg px-4 py-2
+        text-sm
         bg-grey-200;
     }
 </style>
