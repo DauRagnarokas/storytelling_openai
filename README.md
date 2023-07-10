@@ -1,37 +1,38 @@
-# Chatty
-This project enables you to run or deploy your own ChatGPT-like application.
+# Open Ai - Text Generator
 
-### How it works
-This app leverages [OpenAI](https://ai.com)'s recently released ChatGPT API with `gpt-3.5-turbo` model to respond to a chain of chat messages. Users submit messages to a [SvelteKit](https://kit.svelte.dev) API Endpoint/Request Handler, which relays the messages to the ChatGPT API. The responses are then proxied back to the client via SSE to stream the response in realtime.
+The project empowers you to create captivating stories using the power of Open AI. With customizable settings such as temperature, tokens length, tone of speech, and keywords, you have full control over your storytelling experience. Whether you have specific requirements or just want to have a fun chat with AI, this app provides an engaging and enjoyable platform.
 
-### Built with
+## How it works
+
+This app leverages the [OpenAI](https://ai.com) ChatGPT API with the `gpt-3.5-turbo` model to respond to a chain of chat messages. Users submit messages to a [SvelteKit](https://kit.svelte.dev) API Endpoint/Request Handler, which relays the messages to the ChatGPT API. The responses are then proxied back to the client via SSE (Server-Sent Events) to stream the response in real-time.
+
+## Built with
+
 - Meta-Framework: [SvelteKit](https://kit.svelte.dev)
-- Styles/Components: [TailwindCSS](https://tailwindcss.com) & [DaisyUI](https://daisyui.com)
-- Deployment: [Vercel](https://vercel.com)
-
+- Styles/Components: [TailwindCSS](https://tailwindcss.com)
 
 ## Run Locally
 
-Clone the repository
-```sh
-git clone https://github.com/huntabyte/chatty
+To start the app, run the following command from the project's directory:
+
+```shell
+# Install dependencies
+npm i
+
+# Build the app
+npm run build
+
+# Start the server and open the app in a new browser tab
+npm run preview
 ```
 
-Create a .env file within the new directory
-```sh
-cd chatty && touch .env
-echo OPENAI_KEY=<YOUR_API_KEY_HERE> >> .env
+## Login
+
+Use the following credentials to log in:
+
+```shell
+Email: demo@mail.com
+Password: password
 ```
 
-Install dependencies & start the dev server
-```sh
-pnpm i && pnpm run dev
-```
-
-You can now access the dev server running at [localhost:5173](https://localhost:5173)
-
-## Deploy to Vercel
-
-Commit the repository to GitHub and select it when creating a new Vercel deployment.
-
-Don't forget to set the `OPENAI_KEY` environment variable within your Vercel project settings.
+You are encouraged to use your own OpenAI API key. In that case, assign it to the `OPENAI_KEY` environment variable.

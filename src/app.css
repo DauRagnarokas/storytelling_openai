@@ -1,30 +1,59 @@
-/* Global styles here, in PostCSS syntax */
+@import "@fontsource/poppins";
+@import "@fontsource/poppins/600.css";
+@import "@fontsource/inter";
+@import "@fontsource/inter/600.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+:root {
+	--font-display: 'Poppins', sans-serif;
+	--font-body: 'Inter', sans-serif;
+}
+
 html,
 body {
 	@apply h-full;
+	font-family: var(--font-body);
 }
 
 hr {
 	border-top: 1px solid #E0E0E0;
 }
 
-input {
+.input {
 	@apply
-	border-2
+	border
 	w-full
-	border-grey-100
+	border-light-grey
 	px-4
 	h-12
-	rounded-sm;
+		text-sm
+		placeholder-grey-500
+	rounded;
+}
+
+.label {
+	@apply
+	text-base
+	leading-8;
+}
+
+.button {
+	@apply
+	rounded-lg  px-4 h-12 text-white min-w-[112px] display-font font-bold;
 }
 
 .display-font {
-	font-family: Poppins, sans-serif;
+	font-family: var(--font-display);
 }
+
 .body-font {
-	font-family: Inter, sans-serif;
+	font-family: Inter, serif;
+}
+
+.error-button {
+	@apply
+	text-center font-medium focus:ring-4 focus:outline-none inline-flex items-center justify-center px-5 h-12 text-base text-white bg-red-700 hover:bg-red-800   focus:ring-red-300  rounded-lg;
 }
